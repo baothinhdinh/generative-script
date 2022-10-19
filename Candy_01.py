@@ -143,6 +143,8 @@ def create_reflective_material(color, name=None, roughness=0.1, specular=0.5, re
     else:
         return material
 
+#--------------------------------------
+
 clean_scene()
 
 color_list = [
@@ -158,18 +160,14 @@ color_list = [
             "#131313",
         ]
         
-shape = 2
-color_amount = 4
-#color1 = color_list[0]
-#color2 = color_list[1]
-#color3 = color_list[7]
-#color4 = color_list[3]
+shape = 2   # shape 1, shape 2
 
 color1 = random.choice(color_list)
 color2 = random.choice(color_list)
 color3 = random.choice(color_list)
 color4 = random.choice(color_list)
 
+#create shape 1
 if shape == 1:
     #create cone without bottom
     bpy.ops.mesh.primitive_plane_add(size=0.2, enter_editmode=True, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
@@ -183,7 +181,7 @@ if shape == 1:
 
 
 
-
+#create shape 2 - part 1
 if shape == 2:
     # create cube without top and bottom
     bpy.ops.mesh.primitive_plane_add(size=0.1, enter_editmode=True, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
@@ -197,95 +195,60 @@ if shape == 2:
     
     
 
-# create and apply material
+# create and apply material 1
 candy = bpy.context.active_object
-color = hex_color_to_rgba(color1, alpha=1.0)
-material = create_reflective_material(color, name="mat 1", roughness=0.1, specular=0.5, return_nodes=False)
+material = create_reflective_material(hex_color_to_rgba(color1, alpha=1.0), name="mat 1", roughness=0.1, specular=0.5, return_nodes=False)
 candy.data.materials.append(material)
 
-if color_amount >= 2:
-    color = hex_color_to_rgba(color2, alpha=1.0)
-    material = create_reflective_material(color, name="mat 2", roughness=0.1, specular=0.5, return_nodes=False)
-    candy.data.materials.append(material)
+
+# create material 2    
+material = create_reflective_material(hex_color_to_rgba(color2, alpha=1.0), name="mat 2", roughness=0.1, specular=0.5, return_nodes=False)
+candy.data.materials.append(material)
     
-    #Set active material
-    candy.active_material_index = 1
+#Set active material
+candy.active_material_index = 1
 
-    #Set active face
-    bpy.ops.object.editmode_toggle()
+#Set active face
+bpy.ops.object.editmode_toggle()
 
-    bpy.ops.mesh.select_all(action='DESELECT')
+bpy.ops.mesh.select_all(action='DESELECT')
 
-    candy_bmesh = bmesh.from_edit_mesh(candy.data)
-    candy_bmesh.faces.ensure_lookup_table()
-    candy_bmesh.faces[0].select = True
-    candy_bmesh.faces[1].select = True
-    bmesh.update_edit_mesh(candy.data)
+candy_bmesh = bmesh.from_edit_mesh(candy.data)
+candy_bmesh.faces.ensure_lookup_table()
+candy_bmesh.faces[0].select = True
+bmesh.update_edit_mesh(candy.data)
 
-    # Assign material to active face
-    bpy.ops.object.material_slot_assign()
+# Assign material to active face
+bpy.ops.object.material_slot_assign()
 
-    bpy.ops.object.editmode_toggle()
+# create material 3    
+material = create_reflective_material(hex_color_to_rgba(color3, alpha=1.0), name="mat 3", roughness=0.1, specular=0.5, return_nodes=False)
+candy.data.materials.append(material)
     
-    if color_amount >= 3:
-        color = hex_color_to_rgba(color3, alpha=1.0)
-        material = create_reflective_material(color, name="mat 3", roughness=0.1, specular=0.5, return_nodes=False)
-        candy.data.materials.append(material)
+#Set active material
+candy.active_material_index = 2
+# Set active face and Assign material 
+bpy.ops.mesh.select_all(action='DESELECT')
+candy_bmesh.faces[1].select = True
+bmesh.update_edit_mesh(candy.data)
+bpy.ops.object.material_slot_assign()
+
+# create material 4    
+material = create_reflective_material(hex_color_to_rgba(color4, alpha=1.0), name="mat 4", roughness=0.1, specular=0.5, return_nodes=False)
+candy.data.materials.append(material)
     
-        #Set active material
-        candy.active_material_index = 2
+#Set active material
+candy.active_material_index = 3
+# Set active face and Assign material    
+bpy.ops.mesh.select_all(action='DESELECT')
+candy_bmesh.faces[2].select = True
+bmesh.update_edit_mesh(candy.data)
+bpy.ops.object.material_slot_assign()
 
-        #Set active face
-        bpy.ops.object.editmode_toggle()
-
-        bpy.ops.mesh.select_all(action='DESELECT')
-
-        candy_bmesh = bmesh.from_edit_mesh(candy.data)
-        candy_bmesh.faces.ensure_lookup_table()
-
+bpy.ops.object.editmode_toggle()
     
-        candy_bmesh.faces[0].select = False
-        candy_bmesh.faces[1].select = False
-        candy_bmesh.faces[2].select = True
-        bmesh.update_edit_mesh(candy.data)
-
-
-
-        # Assign material to active face
-        bpy.ops.object.material_slot_assign()
-
-        bpy.ops.object.editmode_toggle()
-        
-        if color_amount >= 4:
-            color = hex_color_to_rgba(color4, alpha=1.0)
-            material = create_reflective_material(color, name="mat 4", roughness=0.1, specular=0.5, return_nodes=False)
-            candy.data.materials.append(material)
     
-            #Set active material
-            candy.active_material_index = 3
-
-            #Set active face
-            bpy.ops.object.editmode_toggle()
-
-            bpy.ops.mesh.select_all(action='DESELECT')
-
-            candy_bmesh = bmesh.from_edit_mesh(candy.data)
-            candy_bmesh.faces.ensure_lookup_table()
-
-    
-            candy_bmesh.faces[0].select = False
-            candy_bmesh.faces[1].select = True
-            candy_bmesh.faces[2].select = False
-            
-            bmesh.update_edit_mesh(candy.data)
-
-
-
-            # Assign material to active face
-            bpy.ops.object.material_slot_assign()
-
-            bpy.ops.object.editmode_toggle()
-
+# create shape 2 - part 2
 if shape == 2:
     # Select top vertex
 
@@ -294,11 +257,6 @@ if shape == 2:
     candy_bmesh = bmesh.from_edit_mesh(candy.data)
    
     for vert in candy_bmesh.verts:
-        #vl = []
-        #for l in vert.link_edges:
-        #   vl.append(l.other_vert(vert).index)
-        #print("Vertex[", vert.index, "]:")
-        #print("\tco: ", vert.co[2])
         if vert.co[2] >= 0.1: #if Z position >= 0.1
             candy_bmesh.verts.ensure_lookup_table() 
             candy_bmesh.verts[vert.index].select = True
@@ -337,7 +295,3 @@ bpy.context.object.modifiers["Subdivision.001"].levels = 2
 
 
 
-#candy.data.polygons[1].select = True
-#candy.data.polygons[2].select = True
-#bpy.ops.object.editmode_toggle()
-#bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type='FACE')
