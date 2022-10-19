@@ -158,7 +158,7 @@ color_list = [
             "#131313",
         ]
         
-shape = 1
+shape = 2
 color_amount = 4
 #color1 = color_list[0]
 #color2 = color_list[1]
